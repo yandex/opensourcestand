@@ -42,7 +42,7 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         if self.state is not None:
             cached_data = {
-              'data': self.state.get_all_data(),
+              'data': self.state.get_current_state(),
               'uuid': self.reportUUID,
             }
         else:
@@ -60,7 +60,7 @@ class JsonHandler(tornado.web.RequestHandler):
     def get(self):
         if self.state is not None:
             cached_data = {
-              'data': self.state.get_all_data(),
+              'data': self.get_data(),
               'uuid': self.reportUUID,
             }
         else:
@@ -72,6 +72,17 @@ class JsonHandler(tornado.web.RequestHandler):
         self.set_header("Content-type", "application/json")
         self.finish(json.dumps(cached_data))
 
+    def get_data(self):
+        raise Exception('Not implemented')
+
+class DataHandler(JsonHandler):
+    def get_data(self):
+        return self.state.get_current_state()
+
+class ResultsHandler(JsonHandler):
+    def get_data(self):
+        return self.state.get_results()
+
 
 class TopServer(object):
     def __init__(self, state):
@@ -80,14 +91,15 @@ class TopServer(object):
         self.app = tornado.web.Application(
             router.apply_routes([
               (r"/", MainHandler, dict(template='index.jade', reportUUID=self.reportUUID, state=state)),
-              (r"/data\.json$", JsonHandler, dict(reportUUID=self.reportUUID, state=state)),
+              (r"/data\.json$", DataHandler, dict(reportUUID=self.reportUUID, state=state)),
+              (r"/results\.json$", ResultsHandler, dict(reportUUID=self.reportUUID, state=state)),
             ]),
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
             debug=True,
             )
 
-    def serve(self, ioloop):
+    def run(self, ioloop):
         self.server = SocketServer(self.app, io_loop=ioloop, auto_start=False)
 
     def send(self, data):
