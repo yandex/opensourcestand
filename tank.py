@@ -10,12 +10,12 @@ class Tank(object):
     def run(self):
         self.context = zmq.Context()
         self.sock = self.context.socket(zmq.PUSH)
-        logging.info('binding to \'tcp://%s:%s\'' % (self.host, self.port))
-        self.sock.bind('tcp://%s:%s' % (self.host, self.port))
+        logging.info('binding to \'tcp://0.0.0.0:%s\'' % (self.port, ))
+        self.sock.bind('tcp://0.0.0.0:%s' % (self.port, ))
 
     def start(self):
         logging.info('Starting tank')
-        os.system("/bin/bash -c ~/start_tank.sh")
+        os.system("ssh %s /bin/bash -c ~/start_tank.sh" % (self.host, ))
 
     def check(self):
         logging.info('Checking tank')

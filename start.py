@@ -23,7 +23,7 @@ class State(object):
     HRESULTS=4
 
     COUNTDOWN_TIME = 3
-    ACTION_TIME = 6
+    ACTION_TIME = 60
     
 
     def __init__(self, ioloop):
@@ -45,7 +45,8 @@ class State(object):
         return {'state': self.state,
                 'user': self.user.name if self.user else None,
                 'timer': self.timer_counter,
-                'rps': self.rps.current_rps(self.ioloop.time())}
+                'rps': self.rps.current_rps(self.ioloop.time()),
+                'points': self.rps.counter}
 
 
     def get_results(self):
@@ -65,8 +66,9 @@ class State(object):
 
         # TODO: get user name from QRCode text
         self.user = self.users.get_user(event.text)
-        logging.info('Hello, %s' % self.user)
         self.state = State.GREETINGS
+        logging.info('Hello, %s' % self.user)
+        self.serv.send(self.get_current_state())
         self.rps.cleanup()
 
 
@@ -74,8 +76,9 @@ class State(object):
         if (self.state != State.GREETINGS):
             raise Exception('Incorrect state transcision!')
 
-        logging.info('Prepare, %s' % self.user)
         self.state = State.COUNTDOWN
+        logging.info('Prepare, %s' % self.user)
+        self.serv.send(self.get_current_state())
         self.timer_counter = State.COUNTDOWN_TIME
         self.timer_fn = State.tank_check
         self.tank.start()
@@ -96,8 +99,9 @@ class State(object):
         if (self.state != State.COUNTDOWN):
             raise Exception('Incorrect state transcision!')
 
-        logging.info('Go, %s' % self.user)
         self.state = State.ACTION
+        logging.info('Go, %s' % self.user)
+        self.serv.send(self.get_current_state())
         self.timer_counter = State.ACTION_TIME
         self.timer_fn = State.results
 
@@ -108,6 +112,7 @@ class State(object):
 
         self.tank.stop()
         self.state = State.RESULTS
+        self.serv.send(self.get_current_state())
         logging.info('Resuts for %s' % self.user)
         logging.info('Points earned: %d' % self.rps.counter)
         self.top.add_result(self.user, self.rps.counter)
@@ -118,6 +123,7 @@ class State(object):
         try:
             self.tank.fire(event.url, event.drum)
             self.rps.add_event(self.ioloop.time(), event)
+            self.serv.send(self.get_current_state())
         except Exception as e:
             if e.message and e.message[0] == 'H':
                 self.hresults()
@@ -141,6 +147,7 @@ class State(object):
             return
 
         logging.debug('timer %d' % self.timer_counter)
+        self.serv.send(self.get_current_state())
         if self.timer_counter > 0:
             self.timer_counter -= 1;
 

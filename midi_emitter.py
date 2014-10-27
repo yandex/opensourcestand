@@ -7,12 +7,38 @@ import events
 
 drums_mapping = {
     48: 'tom1',
-    47: 'tom2',
+    45: 'tom2',
+    41: 'floor_tom',
+    38: 'snare',
+    40: 'snare_rim',
+    46: 'hat',
+    26: 'hat_edge',
+    42: 'hat_closed',
+    22: 'hat_closed_edge',
+    49: 'crash',
+    55: 'crash_edge',
+    51: 'ride',
+    53: 'ride_edge',
+    36: 'bass',
 }
 
+#44: 'hat_pedal',
 urls_mapping = {
     'tom1': '/',
-    'tom2': '/cpuload',
+    'tom2': '/',
+    'floor_tom': '/',
+    'snare': '/',
+    'snare_rim': '/',
+    'hat': '/',
+    'hat_edge': '/',
+    'hat_closed': '/',
+    'hat_closed_edge': '/',
+    'hat_pedal': '/',
+    'crash': '/',
+    'crash_edge': '/',
+    'ride': '/',
+    'ride_edge': '/',
+    'bass': '/',
 }
 
 class Emitter(object):
@@ -36,6 +62,7 @@ class Emitter(object):
                     logging.debug('MIDI ALSA event: %s' % event)
                     drum = drums_mapping[event.data[0]]
                     ev = events.MidiEvent(drum, urls_mapping[drum])
+                    logging.debug('MIDI event: %s' % ev)
                     self.state.post_event(ev)
                 except:
                     pass

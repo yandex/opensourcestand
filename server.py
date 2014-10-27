@@ -21,6 +21,7 @@ class Client(SocketConnection):
     def on_open(self, info):
         print 'Client connected'
         self.CONNECTIONS.add(self)
+        self.emit('event', {'data': {'state': 0}})
 
     def on_message(self, msg):
         print 'Got', msg
@@ -92,7 +93,7 @@ class TopServer(object):
             router.apply_routes([
               (r"/", MainHandler, dict(template='index.jade', reportUUID=self.reportUUID, state=state)),
               (r"/data\.json$", DataHandler, dict(reportUUID=self.reportUUID, state=state)),
-              (r"/results\.json$", ResultsHandler, dict(reportUUID=self.reportUUID, state=state)),
+              (r"/toplist\.json$", ResultsHandler, dict(reportUUID=self.reportUUID, state=state)),
             ]),
             template_path=os.path.join(os.path.dirname(__file__), "templates"),
             static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -104,8 +105,11 @@ class TopServer(object):
 
     def send(self, data):
         for connection in Client.CONNECTIONS:
-            data['uuid'] = self.reportUUID
-            connection.send(json.dumps(data))
+            ev = {}
+            ev['uuid'] = self.reportUUID
+            ev['data'] = data
+            print "Sending data to client ", connection
+            connection.emit('event', ev)
 
     def reload(self):
         for connection in Client.CONNECTIONS:

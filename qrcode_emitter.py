@@ -2,6 +2,7 @@ import sys
 import serial
 import events
 import tornado
+import logging
 
 class Emitter(object):
     def __init__(self, state, ioloop):
@@ -16,7 +17,9 @@ class Emitter(object):
             return
 
         if char == '\n':
-            ev = events.QRCodeEvent(self.data)
+            # http://yaconf.yandex.net/?1281377701
+            userid = self.data.split('?')[1]
+            ev = events.QRCodeEvent(userid)
             self.state.post_event(ev)
             self.data = ''
             return
