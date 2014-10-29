@@ -1,5 +1,5 @@
 class RPSCounter(object):
-    H4X0R = ['tom1', 'tom2', 'tom1', 'tom2']
+    H4X0R = ['tom1', 'tom2', 'floor_tom', 'tom2', 'tom2', 'floor_tom', 'ride_edge']
 
     def __init__(self):
         self.hresult = False

@@ -8,14 +8,14 @@ import events
 drums_mapping = {
     48: 'tom1',
     45: 'tom2',
-    41: 'floor_tom',
+    43: 'floor_tom',
     38: 'snare',
     40: 'snare_rim',
     46: 'hat',
     26: 'hat_edge',
     42: 'hat_closed',
     22: 'hat_closed_edge',
-    49: 'crash',
+    54: 'crash',
     55: 'crash_edge',
     51: 'ride',
     53: 'ride_edge',
@@ -27,7 +27,7 @@ urls_mapping = {
     'tom1': '/',
     'tom2': '/',
     'floor_tom': '/',
-    'snare': '/',
+    'snare': '/cpu_burn',
     'snare_rim': '/',
     'hat': '/',
     'hat_edge': '/',
@@ -38,7 +38,7 @@ urls_mapping = {
     'crash_edge': '/',
     'ride': '/',
     'ride_edge': '/',
-    'bass': '/',
+    'bass': '/heavy',
 }
 
 class Emitter(object):

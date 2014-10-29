@@ -19,7 +19,7 @@ class Client(SocketConnection):
     CONNECTIONS = set()
 
     def on_open(self, info):
-        print 'Client connected'
+        #print 'Client connected'
         self.CONNECTIONS.add(self)
         self.emit('event', {'data': {'state': 0}})
 
@@ -27,7 +27,7 @@ class Client(SocketConnection):
         print 'Got', msg
 
     def on_close(self):
-        print 'Client disconnected'
+        #print 'Client disconnected'
         self.CONNECTIONS.remove(self)
 
     @event('heartbeat')
@@ -108,7 +108,7 @@ class TopServer(object):
             ev = {}
             ev['uuid'] = self.reportUUID
             ev['data'] = data
-            print "Sending data to client ", connection
+            #print "Sending data to client ", connection
             connection.emit('event', ev)
 
     def reload(self):

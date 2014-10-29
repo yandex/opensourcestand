@@ -3437,15 +3437,14 @@ provide(BEMDOM.decl({ block : this.name }, {
     onSetMod : {
         'js' : {
             'inited' : function() {
-                var socket = io('http://localhost:8082');
+                var socket = io.connect('http://localhost:8001');
                 var wrap = this.findElem('wrap');
-                var _this = this;
 
                 socket.on('event', function (data) {
                     var state = data && data.data && data.data.state;
 
                     if (state === 0) {
-                        $.getJSON('http://localhost:8082/toplist.json', function (json) {
+                        $.getJSON('http://localhost:8001/toplist.json', function (json) {
                             var users = json.data.filter(function (user) {
                                 return user.current || user.place <= 5;
                             });
@@ -3483,11 +3482,13 @@ provide(BEMDOM.decl({ block : this.name }, {
 
                     if (state === 3) {
                         if (pageState === 3) {
-                            $('.shooting__scores').html(data.data.rps);
+                            $('.shooting__scores').html(data.data.points);
+                            $('.shooting__timer').html(printTime(data.data.timer));
                         } else {
                             var html = BEMHTML.apply({
                                 block: 'shooting',
-                                scores: data.data.rps
+                                scores: data.data.points,
+                                time: printTime(data.data.timer)
                             });
 
                             BEMDOM.update(wrap, html);
@@ -3502,6 +3503,21 @@ provide(BEMDOM.decl({ block : this.name }, {
 }));
 
 });
+
+function printTime(time) {
+    var min = parseInt(time / 60),
+        sec = time - min * 60;
+
+    return zeros(min) + ':' + zeros(sec);
+}
+
+function zeros(s) {
+    s = '' + s;
+    while (s.length < 2) {
+        s = '0' + s;
+    }
+    return s;
+}
 
 /* end: ../blocks/page/page.js */
 (function(g) {
@@ -4594,11 +4610,15 @@ block('shooting')(
                 content: this.ctx.scores
             },
             {
+                elem: 'timer',
+                content: this.ctx.time
+            },
+            {
                 elem: 'bullets'
             }
         ];
     })
-)
+);
 
 /* end: /Users/direvius/git/tank-show/blocks/shooting/shooting.bemhtml */
 /* begin: /Users/direvius/git/tank-show/blocks/shooting/__bullets/shooting__bullets.bemhtml */

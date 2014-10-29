@@ -135,6 +135,23 @@
   content: '\2605';
 }
 /* /Users/direvius/git/tank-show/blocks/shooting/__scores/shooting__scores.styl:end */
+/* /Users/direvius/git/tank-show/blocks/shooting/__timer/shooting__timer.styl:begin */
+.shooting__timer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 6vh;
+  font-size: 6vw;
+  line-height: 1;
+}
+.shooting__timer::after {
+  font-size: 5vw;
+  vertical-align: top;
+  line-height: 1.1;
+  padding-left: 1vw;
+  content: '\25F7';
+}
+/* /Users/direvius/git/tank-show/blocks/shooting/__timer/shooting__timer.styl:end */
 /* /Users/direvius/git/tank-show/blocks/page/__wrap/page__wrap.styl:begin */
 .page__wrap {
   height: 100%;

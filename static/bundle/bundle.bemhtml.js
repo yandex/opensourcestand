@@ -1088,11 +1088,15 @@ block('shooting')(
                 content: this.ctx.scores
             },
             {
+                elem: 'timer',
+                content: this.ctx.time
+            },
+            {
                 elem: 'bullets'
             }
         ];
     })
-)
+);
 
 /* end: /Users/direvius/git/tank-show/blocks/shooting/shooting.bemhtml */
 /* begin: /Users/direvius/git/tank-show/blocks/shooting/__bullets/shooting__bullets.bemhtml */

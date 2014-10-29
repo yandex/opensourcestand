@@ -136,6 +136,10 @@ exports.deps = [
         "elem": "scores"
     },
     {
+        "block": "shooting",
+        "elem": "timer"
+    },
+    {
         "block": "page",
         "elem": "wrap"
     },

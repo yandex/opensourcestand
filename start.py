@@ -29,7 +29,8 @@ class State(object):
     def __init__(self, ioloop):
         self.ioloop = ioloop
         self.serv = server.TopServer(self)
-        self.tank = tank.Tank(options.options.tank, 43000)
+        #self.tank = tank.Tank(options.options.tank, 43000)
+        self.tank = tank.Tank('192.168.1.2', 43000)
         self.state = State.RESULTS
         self.user = None
         self.rps = rps.RPSCounter()
@@ -138,7 +139,7 @@ class State(object):
             self.rps.hresult = True
             logging.info('Hacked!!')
         self.state = State.HRESULTS
-        self.timer_counter = State.COUNTDOWN_TIME
+        self.timer_counter = State.COUNTDOWN_TIME * 5
         self.timer_fn = State.results
 
 
